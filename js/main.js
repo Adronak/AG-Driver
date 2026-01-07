@@ -49,8 +49,7 @@ const vehicles = [
     price: "A partir de 120 EUR",
     capacity: "3 passagers - 3 bagages",
     tags: ["Massage", "Climatisation 4 zones", "Chauffeur dedie"],
-    image:
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80",
+    image: "assets/img/class-s.jpg",
   },
   {
     type: "Berline executive",
@@ -59,18 +58,16 @@ const vehicles = [
     price: "A partir de 90 EUR",
     capacity: "3 passagers - 2 bagages",
     tags: ["Espace bureau", "Connectivite", "Bouteilles d'eau"],
-    image:
-      "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1600&q=80",
+    image: "assets/img/class-e.jpg",
   },
   {
     type: "Van premium",
-    name: "Mercedes Classe V",
+    name: "Mercedes Viano",
     desc: "Ideal pour les groupes, transferts familles et evenements.",
     price: "A partir de 140 EUR",
     capacity: "6 passagers - 6 bagages",
     tags: ["Acces facile", "Confort lounge", "Grand coffre"],
-    image:
-      "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1600&q=80",
+    image: "assets/img/viano.jpg",
   },
   {
     type: "SUV premium",
@@ -79,8 +76,7 @@ const vehicles = [
     price: "A partir de 110 EUR",
     capacity: "4 passagers - 4 bagages",
     tags: ["Systeme premium", "Assises hautes", "Technologie embarquee"],
-    image:
-      "https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1600&q=80",
+    image: "assets/img/Q4.jpg",
   },
 ];
 
