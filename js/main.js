@@ -1,4 +1,4 @@
-﻿const body = document.body;
+const body = document.body;
 
 body.classList.remove("no-js");
 
@@ -23,6 +23,28 @@ if (navToggle && navMenu) {
   });
 }
 
+const emailParts = ["contact", "agcdriver.fr"];
+const contactEmail = emailParts.join("@");
+
+const emailDisplays = document.querySelectorAll("[data-email-display]");
+const emailLinks = document.querySelectorAll("[data-email-link]");
+const emailButtons = document.querySelectorAll("[data-email-button]");
+
+emailDisplays.forEach((element) => {
+  element.textContent = contactEmail;
+});
+
+emailLinks.forEach((element) => {
+  element.textContent = contactEmail;
+  element.setAttribute("href", `mailto:${contactEmail}`);
+});
+
+emailButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    window.location.href = `mailto:${contactEmail}`;
+  });
+});
+
 const revealItems = document.querySelectorAll(".reveal");
 
 if (revealItems.length > 0) {
@@ -46,36 +68,36 @@ const vehicles = [
     type: "Berline prestige",
     name: "Mercedes Classe S",
     desc: "Silence absolu, finitions cuir et confort longue distance.",
-    price: "A partir de 380 EUR",
+    price: "À partir de 380 EUR",
     capacity: "3 passagers - 3 bagages",
-    tags: ["Massage", "Climatisation 4 zones", "Chauffeur dedie"],
+    tags: ["Massage", "Climatisation 4 zones", "Chauffeur dédié"],
     image: "assets/img/new-class-s.jpg",
   },
   {
     type: "Berline executive",
     name: "Mercedes Classe E",
-    desc: "Equilibre parfait entre elegance et efficacite business.",
-    price: "A partir de 150 EUR",
+    desc: "Équilibre parfait entre élégance et efficacité business.",
+    price: "À partir de 150 EUR",
     capacity: "3 passagers - 2 bagages",
-    tags: ["Espace bureau", "Connectivite", "Bouteilles d'eau"],
+    tags: ["Espace bureau", "Connectivité", "Bouteilles d'eau"],
     image: "assets/img/class-e.jpg",
   },
   {
     type: "Van premium",
     name: "Mercedes Classe V",
-    desc: "Ideal pour les groupes, transferts familles et evenements.",
-    price: "A partir de 350 EUR",
+    desc: "Idéal pour les groupes, transferts familles et événements.",
+    price: "À partir de 350 EUR",
     capacity: "6 passagers - 6 bagages",
-    tags: ["Acces facile", "Confort lounge", "Grand coffre"],
+    tags: ["Accès facile", "Confort lounge", "Grand coffre"],
     image: "assets/img/mercedes-class-v.jpg",
   },
   {
     type: "SUV premium",
-    name: "Audi Q4 Electrique",
+    name: "Audi Q4 Électrique",
     desc: "Confort moderne et tenue de route pour longs trajets.",
-    price: "A partir de 150 EUR",
+    price: "À partir de 150 EUR",
     capacity: "4 passagers - 4 bagages",
-    tags: ["Systeme premium", "Assises hautes", "Technologie embarquee"],
+    tags: ["Système premium", "Assises hautes", "Technologie embarquée"],
     image: "assets/img/new-Q4.jpg",
   },
 ];
@@ -103,7 +125,7 @@ if (slider) {
     vehicles.forEach((_, idx) => {
       const dot = document.createElement("button");
       dot.type = "button";
-      dot.setAttribute("aria-label", `Aller au vehicule ${idx + 1}`);
+      dot.setAttribute("aria-label", `Aller au véhicule ${idx + 1}`);
       dot.addEventListener("click", () => {
         index = idx;
         updateVehicle();
@@ -239,8 +261,8 @@ if (mapElement && window.L) {
     { name: "Saint-Tropez", coords: [43.2707, 6.6402] },
     { name: "Cannes", coords: [43.5528, 7.0174] },
     { name: "Monaco", coords: [43.7384, 7.4246] },
-    { name: "Nice Aeroport", coords: [43.6584, 7.2159] },
-    { name: "Marseille Aeroport", coords: [43.4376, 5.2143] },
+    { name: "Nice Aéroport", coords: [43.6584, 7.2159] },
+    { name: "Marseille Aéroport", coords: [43.4376, 5.2143] },
   ];
 
   locations.forEach((spot) => {
@@ -263,6 +285,25 @@ if (form) {
   const buttonLabel = button ? button.querySelector("span") : null;
   const defaultLabel = buttonLabel ? buttonLabel.textContent : "";
 
+  const buildMailtoLink = () => {
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const message = String(data.get("message") || "").trim();
+    const subject = `Demande AG Driver${name ? ` - ${name}` : ""}`;
+    const body = [
+      `Nom: ${name || "-"}`,
+      `Email: ${email || "-"}`,
+      "",
+      "Message:",
+      message || "-",
+    ].join("\n");
+
+    return `mailto:${contactEmail}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+  };
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -272,9 +313,10 @@ if (form) {
     }
 
     form.classList.add("is-sent");
+    window.location.href = buildMailtoLink();
 
     if (status) {
-      status.textContent = "Merci, votre demande a ete envoyee.";
+      status.textContent = "Votre application email va s'ouvrir pour finaliser l'envoi.";
     }
 
     if (button) {
@@ -283,7 +325,7 @@ if (form) {
       button.classList.add("pulse");
       button.disabled = true;
       if (buttonLabel) {
-        buttonLabel.textContent = "Envoye";
+        buttonLabel.textContent = "Ouvrir l'email";
       }
 
       setTimeout(() => {
