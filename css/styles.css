@@ -787,6 +787,15 @@ p {
   gap: 16px;
 }
 
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
 .field {
   display: grid;
   gap: 8px;
@@ -825,9 +834,19 @@ textarea:focus {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+.form-status.is-error {
+  color: #f2a4a4;
+}
+
 .contact-form.is-sent .form-status {
   opacity: 1;
   transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* FOOTER */

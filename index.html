@@ -15,7 +15,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data: https://tile.openstreetmap.org https://*.tile.openstreetmap.org; media-src 'self'; script-src 'self' https://unpkg.com 'nonce-agcdriver2026'; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://fonts.googleapis.com https://fonts.gstatic.com; upgrade-insecure-requests"
+      content="default-src 'self'; base-uri 'self'; form-action 'self' https://formsubmit.co; frame-ancestors 'none'; object-src 'none'; img-src 'self' data: https://tile.openstreetmap.org https://*.tile.openstreetmap.org; media-src 'self'; script-src 'self' https://unpkg.com 'nonce-agcdriver2026'; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://tile.openstreetmap.org https://*.tile.openstreetmap.org https://fonts.googleapis.com https://fonts.gstatic.com https://formsubmit.co; upgrade-insecure-requests"
     />
 
     <meta property="og:locale" content="fr_FR" />
@@ -369,7 +369,7 @@
               </p>
             <div class="contact-actions">
               <a class="btn primary" href="tel:+33786649658">Appeler AG Driver</a>
-              <button class="btn ghost" type="button" data-email-button>Envoyer un email</button>
+              <a class="btn ghost" href="#contact-form">Envoyer un message</a>
             </div>
               <div class="contact-details">
                 <div>
@@ -387,7 +387,18 @@
               </div>
             </div>
 
-            <form class="contact-form" id="contact-form">
+            <form
+              class="contact-form"
+              id="contact-form"
+              action="https://formsubmit.co/jojolg13@gmail.com"
+              method="POST"
+              data-endpoint="https://formsubmit.co/ajax/jojolg13@gmail.com"
+            >
+              <input type="hidden" name="_subject" value="Nouveau message - AG Driver" />
+              <div class="field hp-field" aria-hidden="true">
+                <label for="company">Société</label>
+                <input type="text" id="company" name="_honey" tabindex="-1" autocomplete="off" />
+              </div>
               <div class="field">
                 <label for="name">Nom complet</label>
                 <input type="text" id="name" name="name" placeholder="Votre nom" required />
@@ -428,6 +439,7 @@
           <a href="#vehicules">Véhicules</a>
           <a href="#contact">Contact</a>
           <a href="/politique-confidentialite/">Politique de confidentialité</a>
+          <a href="/mentions-legales/">Mentions légales</a>
         </div>
       </div>
     </footer>

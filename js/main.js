@@ -284,27 +284,58 @@ if (form) {
   const button = form.querySelector(".btn");
   const buttonLabel = button ? button.querySelector("span") : null;
   const defaultLabel = buttonLabel ? buttonLabel.textContent : "";
+  const honeypot = form.querySelector('input[name="_honey"]');
+  const endpoint = form.getAttribute("data-endpoint") || form.action;
+  const cooldownMs = 60000;
+  const storageKey = "ag-driver-form-last";
+  let startedAt = null;
 
-  const buildMailtoLink = () => {
-    const data = new FormData(form);
-    const name = String(data.get("name") || "").trim();
-    const email = String(data.get("email") || "").trim();
-    const message = String(data.get("message") || "").trim();
-    const subject = `Demande AG Driver${name ? ` - ${name}` : ""}`;
-    const body = [
-      `Nom: ${name || "-"}`,
-      `Email: ${email || "-"}`,
-      "",
-      "Message:",
-      message || "-",
-    ].join("\n");
-
-    return `mailto:${contactEmail}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
+  const readLastSent = () => {
+    try {
+      return Number(localStorage.getItem(storageKey) || 0);
+    } catch {
+      return 0;
+    }
   };
 
-  form.addEventListener("submit", (event) => {
+  const writeLastSent = (value) => {
+    try {
+      localStorage.setItem(storageKey, String(value));
+    } catch {
+      // Ignore storage errors (privacy mode).
+    }
+  };
+
+  const setStatus = (message, isError = false) => {
+    if (!status) {
+      return;
+    }
+    status.textContent = message;
+    status.classList.toggle("is-error", isError);
+    status.classList.toggle("is-success", !isError);
+    form.classList.add("is-sent");
+  };
+
+  const setButtonState = (label, disabled) => {
+    if (!button) {
+      return;
+    }
+    button.disabled = disabled;
+    if (buttonLabel) {
+      buttonLabel.textContent = label;
+    }
+  };
+
+  const markStarted = () => {
+    if (!startedAt) {
+      startedAt = Date.now();
+    }
+  };
+
+  form.addEventListener("input", markStarted);
+  form.addEventListener("focusin", markStarted);
+
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!form.checkValidity()) {
@@ -312,29 +343,55 @@ if (form) {
       return;
     }
 
-    form.classList.add("is-sent");
-    window.location.href = buildMailtoLink();
-
-    if (status) {
-      status.textContent = "Votre application email va s'ouvrir pour finaliser l'envoi.";
+    const now = Date.now();
+    const elapsed = startedAt ? now - startedAt : 0;
+    if (elapsed > 0 && elapsed < 2500) {
+      setStatus("Merci de prendre un instant avant d'envoyer votre message.", true);
+      return;
     }
 
-    if (button) {
-      button.classList.remove("pulse");
-      void button.offsetWidth;
-      button.classList.add("pulse");
-      button.disabled = true;
-      if (buttonLabel) {
-        buttonLabel.textContent = "Ouvrir l'email";
-      }
+    const lastSent = readLastSent();
+    if (lastSent && now - lastSent < cooldownMs) {
+      setStatus("Merci de patienter une minute avant un nouvel envoi.", true);
+      return;
+    }
 
-      setTimeout(() => {
-        button.disabled = false;
-        button.classList.remove("pulse");
-        if (buttonLabel) {
-          buttonLabel.textContent = defaultLabel;
-        }
-      }, 1400);
+    if (honeypot && honeypot.value.trim()) {
+      form.reset();
+      startedAt = null;
+      setStatus("Merci, votre message a bien été envoyé.");
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    setButtonState("Envoi en cours...", true);
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        writeLastSent(now);
+        form.reset();
+        startedAt = null;
+        setStatus("Message envoyé. Nous revenons vers vous rapidement.");
+      } else {
+        const data = await response.json().catch(() => null);
+        const errorMessage =
+          data?.errors?.[0]?.message ||
+          "Une erreur est survenue. Réessayez dans un instant.";
+        setStatus(errorMessage, true);
+      }
+    } catch (error) {
+      setStatus("Impossible d'envoyer le message. Réessayez dans un instant.", true);
+    } finally {
+      setButtonState(defaultLabel, false);
     }
   });
 }
