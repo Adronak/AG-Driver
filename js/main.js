@@ -23,7 +23,7 @@ if (navToggle && navMenu) {
   });
 }
 
-const emailParts = ["contact", "agcdriver.fr"];
+const emailParts = ["jeanluc.cadet13", "gmail.com"];
 const contactEmail = emailParts.join("@");
 
 const emailDisplays = document.querySelectorAll("[data-email-display]");
