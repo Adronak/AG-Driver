@@ -23,7 +23,7 @@ if (navToggle && navMenu) {
   });
 }
 
-const emailParts = ["jeanluc.cadet13", "gmail.com"];
+const emailParts = ["agdrivercontact", "gmail.com"];
 const contactEmail = emailParts.join("@");
 
 const emailDisplays = document.querySelectorAll("[data-email-display]");
